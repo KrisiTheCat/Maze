@@ -1,16 +1,70 @@
 #include <iostream>
+#include <vector>
+#include <windows.h>
+#include "config.h"
+#include "Object.h"
+#include "SpriteManager.h"
+#include "Renderer.h"
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
-    auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
+    SetConsoleOutputCP(437);
 
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
+    SpriteManager spriteManager;
+
+    try {
+        spriteManager.loadAllSprites();
+    } catch (const std::exception& e) {
+        std::cerr << "Initialization Error: " << e.what() << "\n";
+        return 1;
     }
 
+    std::vector<Object*> catalog;
+    for(int i = 0; i < SP_COUNT; ++i) {
+        catalog.push_back(new Object(static_cast<SpriteID>(i)));
+    }
+
+    std::vector<std::vector<Object*>> world(LEVEL_H, std::vector<Object*>(LEVEL_W, catalog[SP_EMPTY]));
+
+    const char* mazeLayout[LEVEL_H] = {
+        "111111111111111111",
+        "1P00010001000000E1",
+        "111101010101111101",
+        "100000010001000001",
+        "101111111111011111",
+        "101000000000010001",
+        "101011111111110101",
+        "10101000S000010101",
+        "101010111111010101",
+        "100010100001010101",
+        "111110101101010101",
+        "100000101001010001",
+        "101111101111011111",
+        "100000000E000000X1",
+        "111111111111111111"
+    };
+
+    for (int r = 0; r < LEVEL_H; ++r) {
+        for (int c = 0; c < LEVEL_W; ++c) {
+            char tile = mazeLayout[r][c];
+            switch (tile) {
+                case '1': world[r][c] = catalog[SP_WALL]; break;
+                case '0': world[r][c] = catalog[SP_EMPTY]; break;
+                case 'P': world[r][c] = catalog[SP_PLAYER]; break;
+                case 'E': world[r][c] = catalog[SP_ENEMY]; break;
+                case 'S': world[r][c] = catalog[SP_SLIME]; break;
+                case 'X': world[r][c] = catalog[SP_PORTAL]; break;
+                default:  world[r][c] = catalog[SP_EMPTY]; break;
+            }
+        }
+    }
+
+    Renderer engine(spriteManager);
+    engine.render(world);
+
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+
+    std::cin.get();
+
+    for(auto* obj : catalog) delete obj;
     return 0;
-    // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
