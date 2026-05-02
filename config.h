@@ -31,6 +31,8 @@ enum SpriteID {
     SP_ENEMY,
     SP_SLIME,
     SP_PORTAL,
+    SP_KEY,
+    SP_SMOKE,
     SP_COUNT
 };
 
@@ -47,6 +49,8 @@ inline std::string getSpritePath(SpriteID id) {
         case SP_ENEMY:  return "sprites/enemy.txt";
         case SP_SLIME:  return "sprites/slime.txt";
         case SP_PORTAL: return "sprites/portal.txt";
+        case SP_KEY:    return "sprites/key.txt";
+        case SP_SMOKE:  return "sprites/smoke.txt";
         default:        return "sprites/empty.txt";
     }
 }

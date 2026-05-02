@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <vector>
 #include "config.h"
-#include "Object.h"
+#include "objects/Object.h"
 #include "SpriteManager.h"
 
 class Renderer {
