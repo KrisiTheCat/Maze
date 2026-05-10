@@ -9,7 +9,7 @@ Renderer::Renderer(const SpriteManager& manager)
     : spriteManager(manager), hConsole(GetStdHandle(STD_OUTPUT_HANDLE)) {}
 
 void Renderer::render(const GameState& state) {
-    COORD coord = { 0, 0 };
+    COORD coord = { 0, HEADER_HEIGHT+1 };
     SetConsoleCursorPosition(hConsole, coord);
 
     const Level& level = state.getLevel();
@@ -57,7 +57,4 @@ void Renderer::render(const GameState& state) {
         }
     }
 
-    SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-    std::cout << '\n';
-    Key::printKeyStatus();
 }

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Item.h"
+#include "Object.h"
+#include "interfaces/Pickable.h"
+#include "interfaces/Triggerable.h"
 
-class Smoke : public Item {
+class Smoke : public Object, public Pickable, public Triggerable {
 public:
-    Smoke() : Item(SP_SMOKE) {}
-    void onTrigger(Player& player) override;
+    Smoke() : Object(SP_SMOKE) {}
 };

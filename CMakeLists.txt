@@ -24,7 +24,6 @@ add_executable(untitled
         objects/Portal.h
         objects/Portal.cpp
         objects/Key.h
-        objects/Key.cpp
         objects/Smoke.h
         objects/Smoke.cpp
         objects/Entity.h
@@ -39,18 +38,17 @@ add_executable(untitled
         objects/Slime.cpp
         LevelManager.h
         LevelManager.cpp
-        objects/Item.h
         objects/interfaces/Collidable.h
         objects/interfaces/Triggerable.h
         objects/interfaces/Movable.h
         objects/interfaces/Pickable.h
         GameController.h
-        effects/InteractionEffect.h
-        effects/VictoryEffect.h
-        effects/GameOverEffect.h
         exceptions/UnexpectedCommand.h
         display/Logger.cpp
         display/Logger.h
+        display/Header.cpp
+        display/Header.h
+        display/HeaderStyle.h
 )
 
 file(COPY resources/sprites DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

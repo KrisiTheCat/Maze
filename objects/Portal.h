@@ -2,17 +2,18 @@
 
 #include <memory>
 #include "Object.h"
-#include "Interfaces.h"
-#include "../effects/InteractionEffect.h"
+#include "interfaces/Collidable.h"
+#include "interfaces/Triggerable.h"
 
 class Portal : public Object, public Collidable, public Triggerable {
-    GameController* controller;
-    std::unique_ptr<InteractionEffect> effect;
+    ConditionPtr checkKeys;
+
 public:
-    Portal();
-    void setController(GameController* ctrl) { controller = ctrl; }
-    void setEffect(std::unique_ptr<InteractionEffect> eff) { effect = std::move(eff); }
+    Portal() : Object(SP_PORTAL), checkKeys(nullptr) {}
+
+    void setCheckKeysCallback(ConditionCallback callback) {checkKeys = std::make_shared<ConditionCallback>(callback);}
 
     bool blocksPlayer() const override;
-    void onTrigger(Player& player) override;
+
+    bool shouldTrigger() const override;
 };

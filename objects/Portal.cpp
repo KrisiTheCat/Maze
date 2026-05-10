@@ -1,14 +1,17 @@
 #include "Portal.h"
 #include "Key.h"
-
-Portal::Portal() : Object(SP_PORTAL), controller(nullptr), effect(nullptr) {}
+#include "../display/Logger.h"
 
 bool Portal::blocksPlayer() const {
-    return !Key::areKeysEnough();
+    if (checkKeys && *checkKeys) {
+        return !(*checkKeys)();
+    }
+    return true;
 }
 
-void Portal::onTrigger(Player& player) {
-    if (controller && effect) {
-        effect->apply(*controller);
+bool Portal::shouldTrigger() const {
+    if (checkKeys && *checkKeys) {
+        return (*checkKeys)();
     }
+    return true;
 }

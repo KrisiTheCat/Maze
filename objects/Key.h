@@ -1,18 +1,10 @@
 #pragma once
+#include "interfaces/Pickable.h"
+#include "interfaces/Triggerable.h"
 
-#include "Item.h"
-
-class Key : public Item {
-private:
-    static int totalKeys;
-    static int collectedKeys;
+class Key : public Object, public Pickable, public Triggerable {
 public:
 
-    Key();
-    ~Key() override;
-
-    void onTrigger(Player& player) override;
-
-    static void printKeyStatus();
-    static const bool areKeysEnough();
+    Key(): Object(SP_KEY) {}
+    ~Key() {}
 };

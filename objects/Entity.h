@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Interfaces.h"
+#include "interfaces/Movable.h"
 
 class Level;
 

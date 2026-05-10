@@ -9,6 +9,7 @@
 #include "display/Renderer.h"
 #include "GameState.h"
 #include "LevelManager.h"
+#include "display/Header.h"
 #include "exceptions/UnexpectedCommand.h"
 #include "display/Logger.h"
 
@@ -40,12 +41,21 @@ int main() {
         spriteManager.loadAllSprites();
         levelManager.discoverLevels();
     } catch (const std::exception& e) {
-        Logger::error(std::format("Initialization Error: {}", e.what()));
+        Logger::error("Initialization Error", e);
        // return 1;
     }
     Logger::info("Initialization success");
 
     GameState state;
+
+    Header header([&state]() {
+        return std::make_pair(state.getKeysCollected(), state.getKeysTotal());
+    });
+
+    state.setGameOverCallback([&header](bool win) {
+        if (win) header.setWin();
+        else header.setLose();
+    });
 
     const std::vector<std::string>& levelFiles = levelManager.getLevels();
     if (levelFiles.empty()) {
@@ -109,7 +119,10 @@ int main() {
     boolean shouldRerender = true;
 
     while (state.isRunning()) {
-        if (shouldRerender) renderer.render(state);
+        if (shouldRerender) {
+            header.display();
+            renderer.render(state);
+        }
         shouldRerender = true;
 
         int ch;
@@ -119,10 +132,21 @@ int main() {
         try {
             state.tick(static_cast<Command>(ch));
         } catch (const UnexpectedCommand& e) {
-            std::cerr << "Error: " << e.what() << "\n";
+            Logger::error("User input", e);
             shouldRerender = false;
-
         }
+    }
+
+    header.display();
+    renderer.render(state);
+
+    int ch;
+
+    ch = _getch();
+    ch = tolower(ch);
+    while (ch != 'q') {
+        ch = _getch();
+        ch = tolower(ch);
     }
 
     return 0;

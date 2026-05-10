@@ -62,6 +62,6 @@ void Logger::info(const string& message) {
 void Logger::warn(const string& message) {
     log("WARN", YL, message);
 }
-void Logger::error(const string& message) {
-    log("ERROR", DR, message);
+void Logger::error(const string& message, const exception& e) {
+    log("ERROR", DR, format("{}: {}", message, e.what()));
 }

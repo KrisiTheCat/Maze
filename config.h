@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <memory>
 #include <windows.h>
 #include <string>
 
@@ -17,12 +19,20 @@
 #define DB (FOREGROUND_BLUE)
 #define DP (FOREGROUND_RED|FOREGROUND_BLUE)
 
+using Callback = std::function<void()>;
+using CallbackPtr = std::shared_ptr<std::function<void()>>;
+using ConditionCallback = std::function<bool()>;
+using ConditionPtr = std::shared_ptr<ConditionCallback>;
+
 static const int SPRITE_ROWS = 6;
 static const int SPRITE_COLS = 6;
 static const int LEVEL_W = 18;
 static const int LEVEL_H = 15;
 static const int VIEW_W = LEVEL_W * SPRITE_COLS;
 static const int VIEW_H = LEVEL_H * SPRITE_ROWS;
+
+static const int HEADER_HEIGHT = 3;
+static const int HEADER_WIDTH = SPRITE_COLS*LEVEL_W-2;
 
 enum SpriteID {
     SP_EMPTY = 0,

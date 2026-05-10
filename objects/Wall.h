@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.h"
-#include "Interfaces.h"
+#include "interfaces/Collidable.h"
 
 class Wall : public Object, public Collidable {
 public:
