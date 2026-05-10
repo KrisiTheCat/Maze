@@ -6,6 +6,7 @@
 
 class SpriteManager {
 private:
+    static const char* filePath;
     std::map<SpriteID, Sprite> sprites;
 public:
     void loadAllSprites();

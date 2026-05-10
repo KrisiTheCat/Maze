@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Pickable.h"
+#include "Item.h"
 
-class Key : public Pickable {
+class Key : public Item {
 private:
     static int totalKeys;
     static int collectedKeys;
@@ -11,7 +11,7 @@ public:
     Key();
     ~Key() override;
 
-    void interact(Player* player) override;
+    void onTrigger(Player& player) override;
 
     static void printKeyStatus();
     static const bool areKeysEnough();

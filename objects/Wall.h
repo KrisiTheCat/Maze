@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Object.h"
+#include "Interfaces.h"
 
-class Wall : public Object {
+class Wall : public Object, public Collidable {
 public:
-    Wall();
-    bool isSolid() const override { return true; }
+    Wall() : Object(SP_WALL) {}
+    bool blocksPlayer() const override { return true; }
 };

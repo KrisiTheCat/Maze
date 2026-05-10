@@ -1,99 +1,127 @@
 #include <iostream>
+#include <conio.h>
+#include <string>
 #include <vector>
+#include <algorithm>
 #include <windows.h>
 #include "config.h"
-#include "objects/Object.h"
-#include "objects/Empty.h"
-#include "objects/Wall.h"
-#include "objects/Portal.h"
-#include "objects/Key.h"
-#include "objects/Smoke.h"
-#include "objects/Player.h"
-#include "objects/Enemy.h"
-#include "objects/Chaser.h"
-#include "objects/Slime.h"
 #include "SpriteManager.h"
-#include "Renderer.h"
+#include "display/Renderer.h"
+#include "GameState.h"
+#include "LevelManager.h"
+#include "exceptions/UnexpectedCommand.h"
+#include "display/Logger.h"
+
+bool askUser(const std::string& question) {
+    std::cout << "\n" << question << " (Y/N): ";
+    std::string response;
+    std::cin >> response;
+    std::transform(response.begin(), response.end(), response.begin(), ::tolower);
+    return response == "y" || response == "yes";
+}
+
+void setCursorPosition(int x, int y) {
+    static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coord = { (SHORT)x, (SHORT)y };
+    SetConsoleCursorPosition(hConsole, coord);
+}
+
+void setTextColor(WORD color) {
+    static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, color);
+}
 
 int main() {
-    SetConsoleOutputCP(437);
-
+    Logger::init();
+  //  return 0;
     SpriteManager spriteManager;
-
+    LevelManager levelManager;
     try {
         spriteManager.loadAllSprites();
+        levelManager.discoverLevels();
     } catch (const std::exception& e) {
-        std::cerr << "Initialization Error: " << e.what() << "\n";
+        Logger::error(std::format("Initialization Error: {}", e.what()));
+       // return 1;
+    }
+    Logger::info("Initialization success");
+
+    GameState state;
+
+    const std::vector<std::string>& levelFiles = levelManager.getLevels();
+    if (levelFiles.empty()) {
+        std::cerr << "No levels found in levels/ directory!\n";
         return 1;
     }
 
-    Player player(1, 1);
-    std::vector<Enemy*> enemies;
+    int selection = 0;
+    bool choosing = true;
 
-    std::vector<std::vector<Object*>> world(LEVEL_H, std::vector<Object*>(LEVEL_W));
+    
+    while (choosing) {
+        setCursorPosition(0, 0);
+        std::cout << "--- SELECT LEVEL ---\n\n";
+        
+        for (int i = 0; i < (int)levelFiles.size(); ++i) {
+            std::string displayName = levelManager.getDisplayName(levelFiles[i]);
 
-    const char* mazeLayout[LEVEL_H] = {
-        "111111111111111111",
-        "1P0K010001000000E1",
-        "111101010101111101",
-        "100000010001000001",
-        "101111111111011111",
-        "101000H00000010001",
-        "101011111111110101",
-        "10101000V000010101",
-        "101010111111010101",
-        "100010100M01010101",
-        "111110101101010101",
-        "100000101001010001",
-        "101111101111011111",
-        "1K0000000E000000X1",
-        "111111111111111111"
-    };
+            if (i == selection) {
+                setTextColor(FOREGROUND_RED | FOREGROUND_INTENSITY);
+                std::cout << " > " << displayName << "   \n";
+                setTextColor(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Reset
+            } else {
+                std::cout << "   " << displayName << "   \n";
+            }
+        }
+        
+        std::cout << "\n(Use W/S or Arrow Keys, Enter to Select)\n";
 
-    for (int r = 0; r < LEVEL_H; ++r) {
-        for (int c = 0; c < LEVEL_W; ++c) {
-            char tile = mazeLayout[r][c];
-            switch (tile) {
-                case '1': world[r][c] = new Wall(); break;
-                case 'P': world[r][c] = &player; player.x = c; player.y = r; break;
-                case 'E': {
-                    auto* chaser = new Chaser(c, r);
-                    enemies.push_back(chaser);
-                    world[r][c] = chaser;
-                    break;
-                }
-                case 'H': {
-                    auto* slime = new Slime(c, r, 1, 0);
-                    enemies.push_back(slime);
-                    world[r][c] = slime;
-                    break;
-                }
-                case 'V': {
-                    auto* slime = new Slime(c, r, 0, 1);
-                    enemies.push_back(slime);
-                    world[r][c] = slime;
-                    break;
-                }
-                case 'K': world[r][c] = new Key(); break;
-                case 'M': world[r][c] = new Smoke(); break;
-                case 'X': world[r][c] = new Portal(); break;
-                default:  world[r][c] = new Empty(); break;
+        int ch = _getch();
+        if (ch == 0 || ch == 224) {
+            ch = _getch();
+            if (ch == 72) { // Up
+                selection = (selection - 1 + levelFiles.size()) % levelFiles.size();
+            } else if (ch == 80) { // Down
+                selection = (selection + 1) % levelFiles.size();
+            }
+        } else {
+            ch = tolower(ch);
+            if (ch == 'w') {
+                selection = (selection - 1 + levelFiles.size()) % levelFiles.size();
+            } else if (ch == 's') {
+                selection = (selection + 1) % levelFiles.size();
+            } else if (ch == 13) { // Enter
+                choosing = false;
             }
         }
     }
 
-    Renderer engine(spriteManager);
-    engine.render(world);
+    std::string selectedFile = levelFiles[selection];
+    std::string selectedPath = levelManager.getLevelPath(selectedFile);
+    
+    if (state.loadLevel(selectedPath)) {
+        Logger::info("Level loaded successfully.");
+    } else {
+        Logger::info("Failed to load " + selectedPath + ", using default layout.");
+    }
 
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+    Renderer renderer(spriteManager);
 
-    std::cin.get();
+    boolean shouldRerender = true;
 
-    for (auto& row : world) {
-        for (auto* obj : row) {
-            if (obj != &player) {
-                delete obj;
-            }
+    while (state.isRunning()) {
+        if (shouldRerender) renderer.render(state);
+        shouldRerender = true;
+
+        int ch;
+        ch = _getch();
+        ch = tolower(ch);
+
+        try {
+            state.tick(static_cast<Command>(ch));
+        } catch (const UnexpectedCommand& e) {
+            std::cerr << "Error: " << e.what() << "\n";
+            shouldRerender = false;
+
         }
     }
 

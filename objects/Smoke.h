@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Pickable.h"
+#include "Item.h"
 
-class Smoke : public Pickable {
+class Smoke : public Item {
 public:
-    Smoke();
-    void interact(Player* player) override;
+    Smoke() : Item(SP_SMOKE) {}
+    void onTrigger(Player& player) override;
 };

@@ -36,21 +36,10 @@ enum SpriteID {
     SP_COUNT
 };
 
-struct SpriteData {
-    WORD attr;
-    unsigned char sym;
+enum Command : char {
+    GO_LEFT = 'a',
+    GO_RIGHT = 'd',
+    GO_UP = 'w',
+    GO_DOWN = 's',
+    QUIT = 'q'
 };
-
-inline std::string getSpritePath(SpriteID id) {
-    switch (id) {
-        case SP_EMPTY:  return "sprites/empty.txt";
-        case SP_WALL:   return "sprites/wall.txt";
-        case SP_PLAYER: return "sprites/player.txt";
-        case SP_ENEMY:  return "sprites/enemy.txt";
-        case SP_SLIME:  return "sprites/slime.txt";
-        case SP_PORTAL: return "sprites/portal.txt";
-        case SP_KEY:    return "sprites/key.txt";
-        case SP_SMOKE:  return "sprites/smoke.txt";
-        default:        return "sprites/empty.txt";
-    }
-}

@@ -1,12 +1,14 @@
 #include "Chaser.h"
+#include "../Level.h"
 
 Chaser::Chaser(int startX, int startY) : Enemy(startX, startY) {}
 
-void Chaser::move(const std::vector<std::vector<Object*>>& grid, Player* player) {
-    if(isSmoked()) return;
+void Chaser::move(Player* player, const Level& level) {
+    if (isSmoked()) return;
 
-    if (player->x > x && !grid[y][x+1]->isSolid()) x++;
-    else if (player->x < x && !grid[y][x-1]->isSolid()) x--;
-    else if (player->y > y && !grid[y+1][x]->isSolid()) y++;
-    else if (player->y < y && !grid[y-1][x]->isSolid()) y--;
+    if (player->getX() > getX() && tryMove( 1,  0, level)) return;
+    if (player->getX() < getX() && tryMove(-1,  0, level)) return;
+    if (player->getY() > getY() && tryMove( 0,  1, level)) return;
+    if (player->getY() < getY() && tryMove( 0, -1, level)) return;
+    randomMove(level);
 }

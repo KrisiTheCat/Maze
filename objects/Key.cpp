@@ -5,7 +5,7 @@
 int Key::totalKeys = 0;
 int Key::collectedKeys = 0;
 
-Key::Key() : Pickable(SP_KEY) {
+Key::Key() : Item(SP_KEY) {
     totalKeys++;
 }
 
@@ -13,8 +13,8 @@ Key::~Key() {
     totalKeys--;
 }
 
-void Key::interact(Player* player) {
-    if(player) collectedKeys++;
+void Key::onTrigger(Player& player) {
+    collectedKeys++;
 }
 
 void Key::printKeyStatus() {

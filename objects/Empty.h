@@ -4,5 +4,5 @@
 
 class Empty : public Object {
 public:
-    Empty();
+    Empty() : Object(SP_EMPTY) {}
 };

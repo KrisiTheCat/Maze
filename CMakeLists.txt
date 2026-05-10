@@ -11,24 +11,24 @@ add_executable(untitled
         Sprite.cpp
         SpriteManager.h
         SpriteManager.cpp
-        Renderer.h
-        Renderer.cpp
+        Level.h
+        Level.cpp
+        GameState.h
+        GameState.cpp
+        display/Renderer.h
+        display/Renderer.cpp
         objects/Object.h
         objects/Object.cpp
         objects/Empty.h
-        objects/Empty.cpp
         objects/Wall.h
-        objects/Wall.cpp
         objects/Portal.h
         objects/Portal.cpp
-        objects/Pickable.h
-        objects/Pickable.cpp
         objects/Key.h
         objects/Key.cpp
         objects/Smoke.h
         objects/Smoke.cpp
-        objects/Character.h
-        objects/Character.cpp
+        objects/Entity.h
+        objects/Entity.cpp
         objects/Player.h
         objects/Player.cpp
         objects/Enemy.h
@@ -37,6 +37,21 @@ add_executable(untitled
         objects/Chaser.cpp
         objects/Slime.h
         objects/Slime.cpp
+        LevelManager.h
+        LevelManager.cpp
+        objects/Item.h
+        objects/interfaces/Collidable.h
+        objects/interfaces/Triggerable.h
+        objects/interfaces/Movable.h
+        objects/interfaces/Pickable.h
+        GameController.h
+        effects/InteractionEffect.h
+        effects/VictoryEffect.h
+        effects/GameOverEffect.h
+        exceptions/UnexpectedCommand.h
+        display/Logger.cpp
+        display/Logger.h
 )
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sprites DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY resources/sprites DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY resources/levels DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

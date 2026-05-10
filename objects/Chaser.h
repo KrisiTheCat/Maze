@@ -5,5 +5,5 @@
 class Chaser : public Enemy {
 public:
     Chaser(int startX, int startY);
-    void move(const std::vector<std::vector<Object*>>& grid, Player* player) override;
+    void move(Player* player, const Level& level) override;
 };
