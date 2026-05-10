@@ -74,10 +74,14 @@ bool GameState::loadLevel(const std::string &filename) {
                     });
                 }
                 if (auto smoke = dynamic_cast<Smoke *>(level.get(c, r))) {
-                    smoke->setCallback([this]() { Enemy::smoke(5); });
+                    smoke->setCallback([this]() {
+                        Logger::info("Smoke screen activated! Enemies will be smoked for 5 turns.");
+                        Enemy::smoke(5);
+                    });
                 }
                 if (auto pickable = dynamic_cast<Pickable *>(level.get(c, r))) {
                     pickable->setCollectedCallback([this, c, r]() {
+                        Logger::info("Object collected at (" + std::to_string(c) + ", " + std::to_string(r) + ")");
                         this->level.set(c, r, std::make_unique<Empty>());
                     });
                 }

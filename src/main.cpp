@@ -111,7 +111,7 @@ int main() {
     if (state.loadLevel(selectedPath)) {
         Logger::info("Level loaded successfully.");
     } else {
-        Logger::info("Failed to load " + selectedPath + ", using default layout.");
+        Logger::warn("Failed to load " + selectedPath + ", using default layout.");
     }
 
     Renderer renderer(spriteManager);
@@ -132,7 +132,7 @@ int main() {
         try {
             state.tick(static_cast<Command>(ch));
         } catch (const UnexpectedCommand& e) {
-            Logger::error("User input", e);
+            Logger::warn("User input", e);
             shouldRerender = false;
         }
     }

@@ -1,9 +1,13 @@
 #include "LevelManager.h"
 #include <algorithm>
 
+#include "Level.h"
 #include "display/Logger.h"
+#include "exceptions/LevelValidationExceptions.h"
 
-namespace fs = std::filesystem;
+using namespace std;
+
+namespace fs = filesystem;
 
 void LevelManager::discoverLevels() {
     levelFiles.clear();
@@ -14,27 +18,35 @@ void LevelManager::discoverLevels() {
 
     for (const auto& entry : fs::directory_iterator(levelsDir)) {
         if (entry.is_regular_file() && entry.path().extension() == ".txt") {
-            levelFiles.push_back(entry.path().filename().string());
+            string filename = entry.path().filename().string();
+            string fullPath = getLevelPath(filename);
+            try {
+                Level::validate(fullPath);
+                levelFiles.push_back(filename);
+            } catch (const LevelValidationException& e) {
+                Logger::warn("Validation failed", e);
+            } catch (const exception& e) {
+                Logger::error("Unexpected error validating " + filename, e);
+            }
         }
     }
 
-    Logger::info(std::format("Discovered {} level(s)", levelFiles.size()));
+    Logger::info(format("Discovered {} valid level(s)", levelFiles.size()));
 
-    std::sort(levelFiles.begin(), levelFiles.end());
+    sort(levelFiles.begin(), levelFiles.end());
 }
 
-const std::vector<std::string>& LevelManager::getLevels() const {
+const vector<string>& LevelManager::getLevels() const {
     return levelFiles;
 }
 
-std::string LevelManager::getLevelPath(const std::string& filename) const {
+string LevelManager::getLevelPath(const string& filename) const {
     return levelsDir + "/" + filename;
 }
 
-std::string LevelManager::getDisplayName(const std::string& filename) const {
+string LevelManager::getDisplayName(const string& filename) const {
     size_t dotPos = filename.find_last_of('.');
-    if (dotPos != std::string::npos) {
-        return filename.substr(0, dotPos);
-    }
-    return filename;
+    string name = (dotPos != string::npos) ? filename.substr(0, dotPos) : filename;
+    replace(name.begin(), name.end(), '_', ' ');
+    return name;
 }

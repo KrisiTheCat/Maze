@@ -12,5 +12,6 @@ public:
     static void init();
     static void info(const std::string& message);
     static void warn(const std::string& message);
+    static void warn(const std::string& message, const std::exception& e) ;
     static void error(const std::string& message, const std::exception& e) ;
 };

@@ -6,6 +6,7 @@
 #include "objects/Key.h"
 #include "objects/Smoke.h"
 #include "objects/Portal.h"
+#include "exceptions/LevelValidationExceptions.h"
 
 Level::Level() : tiles(LEVEL_H) {
     for (int i = 0; i < LEVEL_H; ++i) {
@@ -35,7 +36,8 @@ bool Level::load(const std::string& filename, std::vector<EntityData>& entities)
     std::string line;
     for (int r = 0; r < LEVEL_H; ++r) {
         if (!std::getline(file, line)) break;
-        for (int c = 0; c < LEVEL_W && c < (int)line.length(); ++c) {
+        if (line.length() < LEVEL_W) throw InvalidLevelSize(filename);
+        for (int c = 0; c < LEVEL_W; ++c) {
             char ch = line[c];
             switch (ch) {
                 case '1': tiles[r][c] = std::make_unique<Wall>();   break;
@@ -49,13 +51,43 @@ bool Level::load(const std::string& filename, std::vector<EntityData>& entities)
                     entities.push_back({ch, c, r});
                     tiles[r][c] = std::make_unique<Empty>();
                     break;
-                case '0':
-                case ' ':
-                default:  tiles[r][c] = std::make_unique<Empty>();  break;
+                case '0':  tiles[r][c] = std::make_unique<Empty>();  break;
+                default: throw InvalidCharacter(filename, ch);
             }
         }
     }
     return true;
+}
+
+void Level::validate(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) throw LevelValidationException("Could not open level file: " + filename);
+
+    bool hasPlayer = false;
+    bool hasPortal = false;
+    std::string line;
+    int rowCount = 0;
+
+    while (std::getline(file, line)) {
+        if (line.empty()) continue;
+        if (line.length() < LEVEL_W) throw InvalidLevelSize(filename);
+        
+        for (char ch : line) {
+            if (ch == 'P') hasPlayer = true;
+            if (ch == 'X') hasPortal = true;
+            
+            // Check for valid characters
+            if (ch != '1' && ch != '0' && ch != 'K' && ch != 'M' && ch != 'X' && 
+                ch != 'P' && ch != 'E' && ch != 'H' && ch != 'V' && ch != '\r') {
+                throw InvalidCharacter(filename, ch);
+            }
+        }
+        rowCount++;
+    }
+
+    if (rowCount < LEVEL_H) throw InvalidLevelSize(filename);
+    if (!hasPlayer) throw MissingPlayer(filename);
+    if (!hasPortal) throw MissingPortal(filename);
 }
 
 bool Level::write(const std::string& filename, const std::vector<EntityData>& entities) const {

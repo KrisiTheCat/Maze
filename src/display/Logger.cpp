@@ -5,7 +5,7 @@
 using namespace std;
 
 short Logger::maxLine = 500;
-short Logger::offset = 150;
+short Logger::offset = 120;
 short Logger::currLine = 0;
 HANDLE Logger::hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -61,6 +61,9 @@ void Logger::info(const string& message) {
 }
 void Logger::warn(const string& message) {
     log("WARN", YL, message);
+}
+void Logger::warn(const string& message, const exception& e) {
+    log("WARN", YL, format("{}: {}", message, e.what()));
 }
 void Logger::error(const string& message, const exception& e) {
     log("ERROR", DR, format("{}: {}", message, e.what()));
