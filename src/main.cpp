@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <windows.h>
 #include "config.h"
-#include "SpriteManager.h"
+#include "display/sprites/SpriteManager.h"
 #include "display/Renderer.h"
 #include "GameState.h"
-#include "LevelManager.h"
+#include "levels/LevelManager.h"
 #include "display/Header.h"
 #include "exceptions/UnexpectedCommand.h"
 #include "display/Logger.h"

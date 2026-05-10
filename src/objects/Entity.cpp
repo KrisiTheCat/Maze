@@ -1,5 +1,5 @@
 #include "Entity.h"
-#include "../Level.h"
+#include "../levels/Level.h"
 #include "interfaces/Collidable.h"
 
 Entity::Entity(SpriteID id, int startX, int startY) : Object(id), x(startX), y(startY) {}

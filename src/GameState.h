@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <vector>
-#include "Level.h"
+#include "levels/Level.h"
 #include "config.h"
 #include "objects/Player.h"
 #include "objects/Enemy.h"

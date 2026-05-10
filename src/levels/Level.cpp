@@ -1,12 +1,12 @@
 #include "Level.h"
 #include <fstream>
 #include <string>
-#include "objects/Wall.h"
-#include "objects/Empty.h"
-#include "objects/Key.h"
-#include "objects/Smoke.h"
-#include "objects/Portal.h"
-#include "exceptions/LevelValidationExceptions.h"
+#include "../objects/Wall.h"
+#include "../objects/Empty.h"
+#include "../objects/Key.h"
+#include "../objects/Smoke.h"
+#include "../objects/Portal.h"
+#include "../exceptions/LevelValidationExceptions.h"
 
 Level::Level() : tiles(LEVEL_H) {
     for (int i = 0; i < LEVEL_H; ++i) {

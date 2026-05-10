@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Empty.h"
-#include "../Level.h"
+#include "../levels/Level.h"
 #include "interfaces/Pickable.h"
 #include "interfaces/Triggerable.h"
 

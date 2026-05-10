@@ -55,7 +55,10 @@ bool GameState::loadLevel(const std::string &filename) {
                 else if (entity.type == 'H') enemy = std::make_unique<Slime>(entity.x, entity.y, 1, 0);
                 else if (entity.type == 'V') enemy = std::make_unique<Slime>(entity.x, entity.y, 0, 1);
 
-                enemy->setCallback([this]() { this->lose(); });
+                enemy->setCallback([this]() {
+                    Logger::info("Enemy triggered! Player loses.");
+                    this->lose();
+                });
                 enemies.push_back(std::move(enemy));
             }
         }
@@ -63,7 +66,10 @@ bool GameState::loadLevel(const std::string &filename) {
         for (int r = 0; r < LEVEL_H; ++r) {
             for (int c = 0; c < LEVEL_W; ++c) {
                 if (auto portal = dynamic_cast<Portal *>(level.get(c, r))) {
-                    portal->setCallback([this]() { this->win(); });
+                    portal->setCallback([this]() {
+                        Logger::info("Portal triggered! Checking keys...");
+                        this->win();
+                    });
                     portal->setCheckKeysCallback([this]() { return this->areKeysEnough(); });
                 }
                 if (auto key = dynamic_cast<Key *>(level.get(c, r))) {

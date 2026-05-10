@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD 23)
 add_executable(untitled
         src/main.cpp
         src/config.h
-        src/Pixel.h
-        src/Sprite.h
-        src/Sprite.cpp
-        src/SpriteManager.h
-        src/SpriteManager.cpp
-        src/Level.h
-        src/Level.cpp
+        src/display/sprites/Pixel.h
+        src/display/sprites/Sprite.h
+        src/display/sprites/Sprite.cpp
+        src/display/sprites/SpriteManager.h
+        src/display/sprites/SpriteManager.cpp
+        src/levels/Level.h
+        src/levels/Level.cpp
         src/GameState.h
         src/GameState.cpp
         src/display/Renderer.h
@@ -36,8 +36,8 @@ add_executable(untitled
         src/objects/Chaser.cpp
         src/objects/Slime.h
         src/objects/Slime.cpp
-        src/LevelManager.h
-        src/LevelManager.cpp
+        src/levels/LevelManager.h
+        src/levels/LevelManager.cpp
         src/objects/interfaces/Collidable.h
         src/objects/interfaces/Triggerable.h
         src/objects/interfaces/Movable.h

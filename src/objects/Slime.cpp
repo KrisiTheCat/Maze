@@ -1,5 +1,4 @@
 #include "Slime.h"
-#include "../Level.h"
 
 Slime::Slime(int startX, int startY, int dirX, int dirY)
     : Enemy(startX, startY), directionX(dirX), directionY(dirY)

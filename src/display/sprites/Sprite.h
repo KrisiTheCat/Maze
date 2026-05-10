@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "config.h"
+#include "../../config.h"
 #include "Pixel.h"
 
 class Sprite {

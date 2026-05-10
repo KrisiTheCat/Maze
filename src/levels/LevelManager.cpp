@@ -2,8 +2,8 @@
 #include <algorithm>
 
 #include "Level.h"
-#include "display/Logger.h"
-#include "exceptions/LevelValidationExceptions.h"
+#include "../display/Logger.h"
+#include "../exceptions/LevelValidationExceptions.h"
 
 using namespace std;
 

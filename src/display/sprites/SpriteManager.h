@@ -2,7 +2,7 @@
 
 #include <map>
 #include "Sprite.h"
-#include "config.h"
+#include "../../config.h"
 
 class SpriteManager {
 private:

@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 #include <string>
-#include "config.h"
-#include "objects/Object.h"
+#include "../config.h"
+#include "../objects/Object.h"
 
 struct EntityData {
     char type;

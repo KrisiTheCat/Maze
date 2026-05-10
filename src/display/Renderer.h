@@ -2,7 +2,7 @@
 
 #include <windows.h>
 #include "../config.h"
-#include "../SpriteManager.h"
+#include "sprites/SpriteManager.h"
 
 class GameState;
 
